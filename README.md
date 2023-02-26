@@ -75,15 +75,32 @@ export default function startScheduler() {
 
 >  use Human Readable intervals
 ```
-everySecond
-everySeconds(5)
-everyMinute
-everyFiveMinutes
-everyMinutes(15)
-everyHour
-everyHours(3)
-everyDay
-everyDays(2)
+ everySecond
+ everySeconds(5)
+ everyMinute
+ everyMinutes(17)
+ everyTwoMinutes
+ everyThreeMinutes
+ everyFourMinutes
+ everyFiveMinutes
+ everyTenMinutes
+ everyFifteenMinutes
+ everyThirtyMinutes
+ hourly
+ hourlyAt
+ everyOddHour
+ everyHours
+ everyTwoHours
+ everyThreeHours
+ everyFourHours
+ everySixHours
+ daily
+ dailyAt
+ everyDays
+ weekly
+ quarterly
+ yearly
+ cron
 ```
 
 > or set using cron syntax
