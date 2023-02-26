@@ -1,20 +1,36 @@
 import cron from 'node-cron';
 import consola from 'consola';
 
-// export interface Runner {
-//   everySecond: () => void;
-//   everySeconds: (seconds: number) => void;
-//   everyMinute: () => void;
-//   everyFiveMinutes: () => void;
-//   everyMinutes: (minutes: number) => void;
-//   everyHour: () => void;
-//   everyHours: (hours: number) => void;
-//   everyDay: () => void;
-//   everyDays: (days: number) => void;
-//   setRawInterval: (interval: string) => void;
-// }
+export interface Scheduler {
+  everySecond: () => void;
+  everySeconds: (seconds: number) => void;
+  everyMinute: () => void;
+  everyMinutes: (minutes: number) => void;
+  everyTwoMinutes: () => void;
+  everyThreeMinutes: () => void;
+  everyFourMinutes: () => void;
+  everyFiveMinutes: () => void;
+  everyTenMinutes: () => void;
+  everyFifteenMinutes: () => void;
+  everyThirtyMinutes: () => void;
+  hourly: () => void;
+  hourlyAt: (minute: number) => void;
+  everyOddHour: () => void;
+  everyHours: (hours: number) => void;
+  everyTwoHours: () => void;
+  everyThreeHours: () => void;
+  everyFourHours: () => void;
+  everySixHours: () => void;
+  daily: () => void;
+  dailyAt: (hour: number, minute: number) => void;
+  everyDays: (days: number) => void;
+  weekly: () => void;
+  quarterly: () => void;
+  yearly: () => void;
+  cron: (interval: string) => void;
+}
 
-function run(callback: Function) {
+function run(callback: Function): Scheduler {
   return {
     everySecond: () => {
       cron.schedule('* * * * * *', callback);
@@ -50,9 +66,6 @@ function run(callback: Function) {
       cron.schedule(`*/${minutes} * * * *`, callback);
     },
     hourly: () => {
-      cron.schedule('0 * * * *', callback);
-    },
-    everyHour: () => {
       cron.schedule('0 * * * *', callback);
     },
     everyHours: (hours: number) => {

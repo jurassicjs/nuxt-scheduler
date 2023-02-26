@@ -1,6 +1,6 @@
 {
   "name": "nuxt-scheduler",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Schedule Jobs within Nuxt 3",
   "license": "MIT",
   "type": "module",
