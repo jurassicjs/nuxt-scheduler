@@ -1,6 +1,4 @@
 import cron from 'node-cron';
-import consola from 'consola';
-
 export interface Scheduler {
   everySecond: () => void;
   everySeconds: (seconds: number) => void;
@@ -113,14 +111,8 @@ function run(callback: Function): Scheduler {
   };
 }
 
-const start = () => {
-  consola.info('Scheduler started');
-};
-
-
 export function useScheduler() {
   return {
-    run,
-    start
+    run
   };
 }
