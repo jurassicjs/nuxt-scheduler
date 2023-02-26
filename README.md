@@ -1,3 +1,6 @@
+
+![NuxtSchedulerBlack](https://user-images.githubusercontent.com/45824492/221433099-051fe13c-089d-4578-9021-a338a2aac80d.png)
+
 <!--
 Get your module up and running quickly.
 
