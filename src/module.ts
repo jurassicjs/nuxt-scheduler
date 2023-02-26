@@ -45,10 +45,33 @@ export default defineNuxtModule<ModuleOptions>({
     const scheduleFileExists = fs.existsSync(schedulerPath)
 
     if (scheduleFileExists) {
-      addServerPlugin(resolve('./runtime/server/plugins/scheduler'))
-      logger.success('nuxt-scheduler is active.')
+      const Singleton = (function () {
+        let instance: Object | null;
+
+        function registerSingletonPlugin() {
+            const object = new Object("I am the instance");
+            addServerPlugin(resolve('./runtime/server/plugins/scheduler'))
+            return object;
+        }
+
+        return {
+            getInstance: function () {
+                if (!instance) {
+                    instance = registerSingletonPlugin();
+                }
+                return instance;
+            }
+        };
+      })();
+
+      if(process.server) {
+        Singleton.getInstance()
+        logger.success('nuxt-scheduler is active.')
+      }
     } else {
       logger.error('nuxt-scheduler not active: cannot find ~/server/app/scheduler.ts')
     }
   }
 })
+
+

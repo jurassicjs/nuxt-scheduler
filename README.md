@@ -76,9 +76,9 @@ export default function startScheduler() {
 >  use Human Readable intervals
 ```
  everySecond
- everySeconds(5)
+ everySeconds
  everyMinute
- everyMinutes(17)
+ everyMinutes
  everyTwoMinutes
  everyThreeMinutes
  everyFourMinutes
@@ -105,7 +105,7 @@ export default function startScheduler() {
 
 > or set using cron syntax
 ```
-setRawInterval('* * * * *')
+cron('* * * * *')
 ```
 
 ## Development
