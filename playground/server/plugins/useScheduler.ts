@@ -4,7 +4,7 @@ import { addUserTasks } from "~/server/app/services/tasks/userTasks";
 import { addSalesTasks } from "~/server/app/services/tasks/salesTasks";
 
 export default function useScheduler() {
-  return useScheduler;
+  return usePluginScheduler;
 }
 
 export function startScheduler() {
