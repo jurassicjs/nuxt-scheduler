@@ -1,4 +1,4 @@
-import startScheduler from '~/server/app/scheduler'
+import {startScheduler} from '~~/server/plugins/useScheduler'
 
 export default function () {
   startScheduler()

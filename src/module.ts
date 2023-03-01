@@ -41,7 +41,7 @@ export default defineNuxtModule<ModuleOptions>({
       options.references.push({ path: resolve(nuxt.options.buildDir, 'types/scheduler.d.ts') })
     })
 
-    const schedulerPath = resolve(nuxt.options.rootDir + '/server/app/scheduler.ts')
+    const schedulerPath = resolve(nuxt.options.rootDir + '/server/plugins/useScheduler.ts')
     const scheduleFileExists = fs.existsSync(schedulerPath)
 
     if (scheduleFileExists) {
@@ -50,7 +50,7 @@ export default defineNuxtModule<ModuleOptions>({
 
         function registerSingletonPlugin() {
             const object = new Object("I am the instance");
-            addServerPlugin(resolve('./runtime/server/plugins/scheduler'))
+            addServerPlugin(resolve('./runtime/server/plugins/scheduler.ts'))
             return object;
         }
 
@@ -64,12 +64,12 @@ export default defineNuxtModule<ModuleOptions>({
         };
       })();
 
-      if(process.server) {
+      if(true) {
         Singleton.getInstance()
         logger.success('nuxt-scheduler is active.')
       }
     } else {
-      logger.error('nuxt-scheduler not active: cannot find ~/server/app/scheduler.ts')
+      logger.error('nuxt-scheduler not active: cannot find ~/server/plugins/utils/scheduler.ts')
     }
   }
 })
