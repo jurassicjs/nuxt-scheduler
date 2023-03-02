@@ -64,10 +64,10 @@ export default defineNuxtModule<ModuleOptions>({
         };
       })();
 
-      if(process.server) {
-        Singleton.getInstance()
-        logger.success('nuxt-scheduler is active.')
-      }
+
+      Singleton.getInstance()
+      logger.success('nuxt-scheduler is active.')
+
     } else {
       logger.error('nuxt-scheduler not active: cannot find ~/server/app/scheduler.ts')
     }
