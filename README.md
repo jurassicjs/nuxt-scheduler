@@ -19,6 +19,8 @@ Find and replace all on all files (CMD+SHIFT+F):
 
 Schedule Jobs within Nuxt 3.
 
+> This is a Server-Side task scheduler for Nuxt which depends on node-scheduler. 
+
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
 <!-- - [📖 &nbsp;Documentation](https://example.com) -->
 
@@ -56,21 +58,52 @@ export default defineNuxtConfig({
 That's it! You can now use Nuxt Scheduler in your Nuxt app ✨
 
 ## Example Usage
-You must create a file here
-> ~/server/app/scheduler.ts
+Create as many scheduler you like as plugins. 
+> ~/server/plugins/smileScheduler.ts
 
 ```js
-import { useScheduler } from "#scheduler";
-import say from "~/server/app/services/say";
+import { useScheduler } from "#scheduler"
+import say from "~~/server/app/services/say";
 
-export default function startScheduler() {
+export default defineNitroPlugin(() => {
+  startScheduler()
+})
+
+function startScheduler() {
   const scheduler = useScheduler();
 
   scheduler.run(() => {
-    say("this should run every 5 seconds");
+    say("cool beans! I run once a second! 😀");
+  }).everySecond();
+
+  // create as many tasks as you want here
+}
+```
+
+Each scheduler can have multiple tasks
+> ~/server/plugins/rocketScheduler.ts
+
+```js
+import { useScheduler } from "#scheduler"
+import say from "~~/server/app/services/say";
+
+
+export default defineNitroPlugin(() => {
+  startScheduler()
+})
+
+function startScheduler() {
+  const scheduler = useScheduler();
+
+  scheduler.run(() => {
+    say("I run every 3 seconds, 🚀🚀🚀");
+  }).everySeconds(3);
+
+  scheduler.run(() => {
+    say("I run every 5 seconds, 🚀🚀🚀🚀🚀");
   }).everySeconds(5);
 
-  // create as many jobs as you want here
+  // create as many tasks as you want here
 }
 ```
 
@@ -101,7 +134,6 @@ export default function startScheduler() {
  weekly
  quarterly
  yearly
- cron
 ```
 
 > or set using cron syntax
@@ -134,6 +166,8 @@ npm run test:watch
 # Release new version
 npm run release
 ```
+
+Special thanks to [Atinux](https://github.com/Atinux) for making suggestions that have made this module better 🚀 
 
 <!-- Badges -->
 [npm-version-src]: https://img.shields.io/npm/v/nuxt-scheduler/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
