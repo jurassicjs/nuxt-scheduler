@@ -19,7 +19,7 @@ Find and replace all on all files (CMD+SHIFT+F):
 
 Schedule Jobs within Nuxt 3.
 
-> This is a Server-Side task scheduler for Nuxt which depends on node-scheduler. 
+> This is a Server-Side task scheduler for Nuxt which depends on node-cron. 
 
 - [✨ &nbsp;Release Notes](/CHANGELOG.md)
 <!-- - [📖 &nbsp;Documentation](https://example.com) -->
