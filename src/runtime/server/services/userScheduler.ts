@@ -107,14 +107,7 @@ function run(callback: Function): Scheduler {
       cron.schedule('0 0 1 1 *', callback);
     },
     cron: (interval: string, timezone?: string) => {
-      // cron.schedule(interval, callback);
-      if(timezone)
-        cron.schedule(interval, callback, {
-          scheduled: true,
-          timezone: timezone
-        });
-      else
-        cron.schedule(interval, callback);
+      timezone ? cron.schedule(interval, callback, { scheduled: true, timezone: timezone }) : cron.schedule(interval, callback);
     }
   };
 }
