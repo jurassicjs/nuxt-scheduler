@@ -1,4 +1,5 @@
 import cron from 'node-cron';
+
 export interface Scheduler {
   everySecond: () => void;
   everySeconds: (seconds: number) => void;
@@ -25,7 +26,7 @@ export interface Scheduler {
   weekly: () => void;
   quarterly: () => void;
   yearly: () => void;
-  cron: (interval: string) => void;
+  cron: (interval: string, timezone?: string) => void;
 }
 
 function run(callback: Function): Scheduler {
@@ -105,8 +106,15 @@ function run(callback: Function): Scheduler {
     yearly: () => {
       cron.schedule('0 0 1 1 *', callback);
     },
-    cron: (interval: string) => {
-      cron.schedule(interval, callback);
+    cron: (interval: string, timezone?: string) => {
+      // cron.schedule(interval, callback);
+      if(timezone)
+        cron.schedule(interval, callback, {
+          scheduled: true,
+          timezone: timezone
+        });
+      else
+        cron.schedule(interval, callback);
     }
   };
 }
