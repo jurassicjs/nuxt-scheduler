@@ -1,4 +1,4 @@
-import { defineNuxtModule, createResolver, addTemplate, useLogger } from '@nuxt/kit'
+import { defineNuxtModule, createResolver, addTemplate, resolveModule, extendPages } from '@nuxt/kit'
 import defu from 'defu'
 
 export interface ModuleOptions { }
@@ -23,6 +23,20 @@ export default defineNuxtModule<ModuleOptions>({
         inline: [resolve('./runtime')]
       })
       nitroConfig.alias['#scheduler'] = resolve('./runtime/server/services')
+
+      nitroConfig.publicAssets ||= []
+      nitroConfig.publicAssets.push({
+        dir: resolve('./runtime/public'),
+        maxAge: 60 * 60 * 24 * 365 // 1 year
+      })
+    })
+
+    extendPages((pages) => {
+      pages.push({
+        name: 'Schedule Log',
+        path: '/schedule-log',
+        file: resolve(__dirname, './runtime/pages/scheduleLog.vue')
+      })
     })
 
     addTemplate({

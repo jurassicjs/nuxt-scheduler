@@ -1,4 +1,7 @@
 {
   "private": true,
-  "name": "nuxt-scheduler-playground"
+  "name": "nuxt-scheduler-playground",
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.8.0"
+  }
 }
