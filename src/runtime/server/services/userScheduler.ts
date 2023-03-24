@@ -107,7 +107,11 @@ function run(callback: Function): Scheduler {
       cron.schedule('0 0 1 1 *', callback);
     },
     cron: (interval: string, timezone?: string) => {
-      timezone ? cron.schedule(interval, callback, { scheduled: true, timezone: timezone }) : cron.schedule(interval, callback);
+      try {
+        timezone ? cron.schedule(interval, callback, { scheduled: true, timezone: timezone }) : cron.schedule(interval, callback);
+      } catch (err) {
+        throw new TypeError(`⛔ Invalid time zone specified: "${timezone}"`);
+      }
     }
   };
 }
