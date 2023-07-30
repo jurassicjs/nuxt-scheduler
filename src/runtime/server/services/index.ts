@@ -1,1 +1,1 @@
-export {useScheduler} from './userScheduler'
+export {useScheduler} from './useScheduler'
