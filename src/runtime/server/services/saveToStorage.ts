@@ -13,7 +13,6 @@ export async function saveToStorage(
   if (hasKey) {
     // @ts-ignore
     item = await theStorage.getItem(internalSchedulerObject.schedulerKey)
-    console.log('getting item: ', item)
   }
 
   const log = {
