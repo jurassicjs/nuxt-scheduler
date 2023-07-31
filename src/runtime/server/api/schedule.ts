@@ -1,5 +1,6 @@
-import { storage } from "~/server/app/services/storage"
+import {defaultStorage as storage} from "~/server/app/services/storage"
 
+// @ts-ignore
 export default defineEventHandler(async () => {
   try {
     const all = await storage.getKeys()
@@ -7,17 +8,16 @@ export default defineEventHandler(async () => {
     const schedulerKeys = all.filter((key: string) => key.startsWith('scheduler:'))
 
     await Promise.all(schedulerKeys.map(async (key: string) => {
-      const item =  await storage.getItem(key)
+      const item = await storage.getItem(key)
       schedulerLog.push({jobKey: key, entries: item})
     }))
 
     return {
       schedulerLog
     }
-  }
-  catch (e) {
+  } catch (e) {
     if (e instanceof Error) {
-      return { message: 'there was a problem', error: e.message }
+      return {message: 'there was a problem', error: e.message}
     }
   }
 })
