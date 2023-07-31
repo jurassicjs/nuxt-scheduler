@@ -1,23 +1,29 @@
-import type {SchedulerObject} from './types/Scheduler';
 import {getSchedulerStorage} from './useScheduler';
-export async function saveToStorage(schedulerObject: SchedulerObject, interval: string, output: string) {
+import {InternalSchedulerObject} from "./types/Scheduler";
+
+export async function saveToStorage(
+  internalSchedulerObject: InternalSchedulerObject,
+  interval: string,
+  output: string
+) {
   const theStorage = getSchedulerStorage()
   let item = []
-  const hasKey = await theStorage.hasItem(schedulerObject.schedulerKey)
+  const hasKey = await theStorage.hasItem(internalSchedulerObject.schedulerKey)
+
   if (hasKey) {
     // @ts-ignore
-    item = await theStorage.getItem(schedulerObject.schedulerKey)
+    item = await theStorage.getItem(internalSchedulerObject.schedulerKey)
   }
 
   const log = {
-    jobDescription: schedulerObject.jobDescription,
-    passed: schedulerObject.passed,
+    jobDescription: internalSchedulerObject.jobDescription,
+    passed: internalSchedulerObject.passed,
     interval: interval,
     output: output,
     dateTime: new Date().toISOString()
   }
 
   item.push(log)
-  await theStorage.setItem("app:test", 'cool');
-  await theStorage.setItem(schedulerObject.schedulerKey, item)
+
+  await theStorage.setItem(internalSchedulerObject.schedulerKey, item)
 }

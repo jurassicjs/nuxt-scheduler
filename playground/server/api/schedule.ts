@@ -8,11 +8,8 @@ export default defineEventHandler(async () => {
 
     await Promise.all(schedulerKeys.map(async (key: string) => {
       const item =  await storage.getItem(key)
-      console.log('item', item)
       schedulerLog.push({jobKey: key, entries: item})
     }))
-
-    console.log('schedulerLog', schedulerLog)
 
     return {
       schedulerLog

@@ -1,6 +1,7 @@
 // @ts-ignore
 import cron from 'node-cron';
 import {saveToStorage} from './saveToStorage';
+import {InternalSchedulerObject} from "./types/Scheduler";
 
 export function run(callback: Function) {
   const schedulerObject = {
@@ -8,7 +9,7 @@ export function run(callback: Function) {
     setJobDescription: (jobDescription: string) => setJobDescription(jobDescription),
   }
 
-  const internalSchedulerObject = {
+  const internalSchedulerObject: InternalSchedulerObject = {
     jobDescription: 'default',
     passed: false,
     schedulerKey: 'scheduler:default',
@@ -37,7 +38,7 @@ export function run(callback: Function) {
       const output = await callback()
       if (internalSchedulerObject.saveOutput) {
         internalSchedulerObject.passed = true
-        await saveToStorage(schedulerObject, schedule, output)
+        await saveToStorage(internalSchedulerObject, schedule, output)
       }
     } catch (error) {
       if (internalSchedulerObject.saveOutput) {
@@ -46,7 +47,7 @@ export function run(callback: Function) {
         if (error instanceof Error) {
           errorMessage = error.message
         }
-        await saveToStorage(schedulerObject, schedule, JSON.stringify({errorMessage: errorMessage, error: error}))
+        await saveToStorage(internalSchedulerObject, schedule, JSON.stringify({errorMessage: errorMessage, error: error}))
       }
     }
   }

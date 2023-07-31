@@ -31,3 +31,10 @@ export interface Intervals {
   yearly: () => SchedulerObject;
   cron: (interval: string, timezone?: string) => SchedulerObject;
 }
+
+export type InternalSchedulerObject = {
+  jobDescription: string;
+  passed: boolean;
+  schedulerKey: string;
+  saveOutput: boolean;
+};

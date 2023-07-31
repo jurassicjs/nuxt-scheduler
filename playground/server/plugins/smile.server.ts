@@ -33,7 +33,7 @@ function startScheduler() {
   scheduler.run(async() => {
     say("cool beans! I run every 20 seconds! But I don't save the output");
     return 'cool working'
-  }).everySeconds(20)
+  }).everySecond().saveOutputTo("scheduler:coolbeans")
 
   scheduler.run(async() => {
     say("I send a newsletter every minute!");
