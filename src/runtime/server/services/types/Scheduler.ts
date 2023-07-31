@@ -1,13 +1,7 @@
 
 export interface SchedulerObject {
-  setStorage: (schedulerStorage: Storage) => void
-  run: (callback: Function) => Intervals
   saveOutputTo: (key: string) => void
-  saveOutput: boolean
-  schedulerKey: string
   setJobDescription: (jobDescription: string) => SchedulerObject
-  jobDescription: string
-  passed: boolean
 }
 export interface Intervals {
   everySecond: (jobDescription?: string) => SchedulerObject;

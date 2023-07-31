@@ -10,7 +10,7 @@
         >
       </div>
       <div
-        v-for="(log, index) in data.schedulerLog"
+        v-for="(log, index) in data?.schedulerLog"
         :key="index"
         class="log"
       >

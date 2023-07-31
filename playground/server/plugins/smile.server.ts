@@ -50,5 +50,8 @@ function startScheduler() {
     say("Running a job at 21:23 PM at Europe/Berlin 😀");
   }).cron('23 21 * * *', 'Europe/Berlin').setJobDescription('I do Something via cron').saveOutputTo("cron");
 
+  scheduler.run(() => {
+    say("Running a job at 21:23 PM at Europe/Berlin 😀");
+  }).hourly().setJobDescription('I do Something via cron').saveOutputTo("hahaha");
   // create as many tasks as you want here
 }

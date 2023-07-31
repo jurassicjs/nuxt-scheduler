@@ -12,8 +12,9 @@ export default defineEventHandler(async () => {
       schedulerLog.push({jobKey: key, entries: item})
     }))
 
+    console.log('schedulerLog', schedulerLog)
+
     return {
-      all,
       schedulerLog
     }
   }

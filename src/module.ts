@@ -1,4 +1,4 @@
-import { defineNuxtModule, createResolver, addTemplate, resolveModule, extendPages } from '@nuxt/kit'
+import {defineNuxtModule, createResolver, addTemplate, resolveModule, extendPages, addComponent} from '@nuxt/kit'
 import defu from 'defu'
 
 export interface ModuleOptions { }
@@ -31,12 +31,11 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
 
-    extendPages((pages) => {
-      pages.push({
-        name: 'Schedule Log',
-        path: '/schedule-log',
-        file: resolve(__dirname, './runtime/pages/scheduleLog.vue')
-      })
+    console.log('loading component', resolve(__dirname, './runtime/components/ScheduleLog.vue'))
+
+    addComponent({
+      filePath: resolve(__dirname, './runtime/components/ScheduleLog.vue'),
+      name: 'ScheduleLog',
     })
 
     addTemplate({
