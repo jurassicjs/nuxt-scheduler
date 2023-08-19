@@ -4,6 +4,7 @@ import {run} from "./run";
 
 let mySchedulerStorage = storage
 type Storage = typeof mySchedulerStorage
+
 export function getSchedulerStorage() {
   return storage
 }

@@ -3,9 +3,9 @@ import cron from 'node-cron';
 import {saveToStorage} from './saveToStorage';
 import {InternalSchedulerObject} from "./types/Scheduler";
 
-export function run(callback: Function) {
+export function run(key: string, callback: Function) {
   const schedulerObject = {
-    saveOutputTo: (key: string) => saveOutputTo(key),
+    saveOutput: () => saveOutput(),
     setJobDescription: (jobDescription: string) => setJobDescription(jobDescription),
   }
 
@@ -16,7 +16,7 @@ export function run(callback: Function) {
     saveOutput: false,
   }
 
-  function saveOutputTo(key: string): void {
+  function saveOutput(): void {
     internalSchedulerObject.saveOutput = true;
     if (!key.startsWith('scheduler:')) {
       const newKey = `scheduler:${key}`

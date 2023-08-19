@@ -1,4 +1,4 @@
-import {defineNuxtModule, createResolver, addTemplate, addComponent, addServerHandler} from '@nuxt/kit'
+import {defineNuxtModule, createResolver, addTemplate, addComponent, addServerHandler, addPlugin} from '@nuxt/kit'
 import defu from 'defu'
 
 export interface ModuleOptions { }
@@ -31,8 +31,7 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
 
-    console.log('loading component', resolve(__dirname, './runtime/components/ScheduleLog.vue'))
-
+    // console.log('loading component', resolve(__dirname, './runtime/components/ScheduleLog.vue'))~
 
     addServerHandler({
       route: '/api/schedule',

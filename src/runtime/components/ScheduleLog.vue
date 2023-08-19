@@ -3,8 +3,8 @@
     <div class="container">
       <div class="logo-top">
         <img
-          src="/NuxtScheduler.png"
-          alt="Discover Nuxt 3"
+          src="/nuxtscheduler.png"
+          alt="Nuxt Scheduler"
           height="100"
           width="100"
         >
