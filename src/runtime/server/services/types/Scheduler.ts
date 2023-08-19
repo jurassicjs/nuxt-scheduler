@@ -9,4 +9,7 @@ export type InternalSchedulerObject = {
   passed: boolean;
   schedulerKey: string;
   saveOutput: boolean;
+  interval: string | undefined;
+  input: string | undefined;
+  timezone: string | undefined;
 };

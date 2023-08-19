@@ -1,13 +1,24 @@
 <template>
   <div class="dark-background">
     <div class="container">
-      <div class="logo-top">
+      <!-- <div class="logo-top">
         <img
           src="/nuxtscheduler.png"
           alt="Nuxt Scheduler"
           height="100"
           width="100"
         >
+      </div> -->
+      <div v-for="(task, index) in data?.register" :key="index" class="register">
+        <div class="col">
+           Key {{ task.key }}
+        </div>
+        <div class="col">
+           Description {{ task.internalSchedulerObject.jobDescription }}
+        </div>
+        <div class="col">
+           interval: {{ task.internalSchedulerObject.interval }}
+        </div>
       </div>
       <div
         v-for="(log, index) in data?.schedulerLog"
@@ -113,6 +124,19 @@ body {
   border: 1px solid #444;
   border-radius: 5px;
   margin-bottom: 1em;
+}
+
+.register {
+  border: 1px solid #0db92c;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;  /* optional, based on your design requirement */
+}
+
+.col {
+  flex: 1;
+  padding: 5px;  
+  border: 1px solid #ccc; 
 }
 
 .title {

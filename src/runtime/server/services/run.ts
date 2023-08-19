@@ -1,7 +1,28 @@
 // @ts-ignore
 import cron from 'node-cron';
 import {saveToStorage} from './saveToStorage';
-import {InternalSchedulerObject} from "./types/Scheduler";
+import { InternalSchedulerObject } from './types/Scheduler';
+
+type MethodObject = {
+  [key: string]: (...args: any[]) => any;
+};
+
+let scheduleRegister: Map<string, InternalSchedulerObject> = new Map();
+
+function registerJob(key: string, internalSchedulerObject: InternalSchedulerObject) {
+  // console.log(`registering key: ${key}`)
+  scheduleRegister.set(key, internalSchedulerObject);
+}
+
+export function getscheduleRegister() {
+  const scheduleObject = Array.from(scheduleRegister.entries()).reduce<{ [key: string]: { key: string, internalSchedulerObject: InternalSchedulerObject } }>((acc, [key, internalSchedulerObject]) => {
+    acc[key] = { key, internalSchedulerObject };
+    return acc;
+  }, {});
+
+  // console.log(`run: ---> registered ${JSON.stringify(scheduleObject)}`);
+  return scheduleObject;
+}
 
 export function run(key: string, callback: Function) {
   const schedulerObject = {
@@ -14,6 +35,32 @@ export function run(key: string, callback: Function) {
     passed: false,
     schedulerKey: 'scheduler:default',
     saveOutput: false,
+    interval: undefined,
+    input: undefined,
+    timezone: undefined
+  }
+
+  function wrapWithProxy(targetObject: MethodObject): MethodObject {
+    return new Proxy(targetObject, {
+      get(target, propName, receiver) {
+        if (typeof propName === "symbol") return;
+  
+        const origMethod = target[propName];
+        if (typeof origMethod === 'function') {
+          return function(...args: any[]) {
+            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+            // Call the original method
+            const result = origMethod.apply(target, args);
+            console.log({interval: origMethod.name, input: args[0], timezone: args[1]})
+            internalSchedulerObject.interval = origMethod.name
+            internalSchedulerObject.input = args[0]
+            internalSchedulerObject.timezone = args[1]
+            return result;
+          }.bind(target);
+        }
+        return origMethod;
+      }
+    });
   }
 
   function saveOutput(): void {
@@ -28,8 +75,12 @@ export function run(key: string, callback: Function) {
     internalSchedulerObject.schedulerKey = key
   }
 
+  registerJob(key, internalSchedulerObject)
+  
+
   function setJobDescription(jobDescription: string) {
     internalSchedulerObject.jobDescription = jobDescription
+    registerJob(key, internalSchedulerObject); // re-register with the updated description
     return schedulerObject
   }
 
@@ -52,7 +103,7 @@ export function run(key: string, callback: Function) {
     }
   }
 
-  return {
+ const intervalMethods = {
     everySecond:() => {
       cron.schedule('* * * * * *', async () => {
         await executeAndHandleError(callback, 'everySecond')
@@ -211,5 +262,7 @@ export function run(key: string, callback: Function) {
       });
       return schedulerObject
     }
+
   }
+  return  wrapWithProxy(intervalMethods);
 }

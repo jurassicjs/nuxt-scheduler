@@ -1,4 +1,5 @@
 import {defaultStorage as storage} from "~/server/app/services/storage"
+import { getscheduleRegister } from "../services/run"
 
 // @ts-ignore
 export default defineEventHandler(async () => {
@@ -12,8 +13,13 @@ export default defineEventHandler(async () => {
       schedulerLog.push({jobKey: key, entries: item})
     }))
 
+    const register =  getscheduleRegister()
+
+    console.log(`XXXXXXXXXXXXXXXXXXx---> registered ${JSON.stringify(register)}`)
+
     return {
-      schedulerLog
+      schedulerLog,
+      register
     }
   } catch (e) {
     if (e instanceof Error) {
