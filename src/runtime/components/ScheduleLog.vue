@@ -6,8 +6,7 @@
         <div class="log" v-for="(task, index) in tasks" :key="index">
           <div class="">key: {{ task.key }}</div>
           <div class="">description: {{ task.jobDescription }}</div>
-          <div class="">Interval: {{ task.interval }}</div>
-          <div class="">input: {{ task.input ?? 'n/a' }}</div>
+          <div class="">Interval: {{ task.interval }} {{ task.input }}</div>
           <div class="tasks" v-if="task.matchingLogs.length < 1"> No tasks have run yet</div>
           <div v-else>
             <div class="entry-container tasks">
