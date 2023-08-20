@@ -15,12 +15,11 @@ function registerJob(key: string, internalSchedulerObject: InternalSchedulerObje
 }
 
 export function getscheduleRegister() {
-  const scheduleObject = Array.from(scheduleRegister.entries()).reduce<{ [key: string]: { key: string, internalSchedulerObject: InternalSchedulerObject } }>((acc, [key, internalSchedulerObject]) => {
-    acc[key] = { key, internalSchedulerObject };
-    return acc;
-  }, {});
+  const scheduleObject = Array.from(scheduleRegister.entries()).map(([key, scheduleObject]) => ({
+    key,
+    ...scheduleObject
+}));
 
-  // console.log(`run: ---> registered ${JSON.stringify(scheduleObject)}`);
   return scheduleObject;
 }
 
@@ -44,7 +43,6 @@ export function run(key: string, callback: Function) {
     return new Proxy(targetObject, {
       get(target, propName, receiver) {
         if (typeof propName === "symbol") return;
-  
         const origMethod = target[propName];
         if (typeof origMethod === 'function') {
           return function(...args: any[]) {

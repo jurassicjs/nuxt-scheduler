@@ -14,10 +14,13 @@
            Key {{ task.key }}
         </div>
         <div class="col">
-           Description {{ task.internalSchedulerObject.jobDescription }}
+           Description {{ task.jobDescription }}
         </div>
         <div class="col">
-           interval: {{ task.internalSchedulerObject.interval }}
+           interval: {{ task.interval }}
+        </div>
+        <div class="col">
+           input: {{ task.input ?? 'n/a' }}
         </div>
       </div>
       <div
@@ -127,7 +130,7 @@ body {
 }
 
 .register {
-  border: 1px solid #0db92c;
+  border: 1px solid #00b894;
   display: flex;
   justify-content: space-between;
   width: 100%;  /* optional, based on your design requirement */
