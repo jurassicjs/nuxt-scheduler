@@ -30,9 +30,9 @@ export default defineNitroPlugin(() => {
     const scheduler = useScheduler();
     scheduler.setStorage(storage)
 
-    scheduler.run('cool:beans', async () => {
-      say("xxx cool beans! I run every 20 seconds! But I don't save the output");
-    }).everySeconds(20)
+    scheduler.run('cool:beans', () => {
+      return say("xxx cool beans! I run every 20 seconds! But I don't save the output");
+    }).everySeconds(5).setJobDescription('whatever').saveOutput()
 
     scheduler.run('scheduler:newsletter', async () => {
       say("I send a newsletter every minute! I also save the output");
@@ -42,11 +42,11 @@ export default defineNitroPlugin(() => {
     scheduler.run('heyYou', async () => {
       throw new Error('This is the error and it is not cool yo 🥲')
       return doSomething()
-    }).everyMinute().setJobDescription('I do Something').saveOutput()
-
+    }).everyMinute().setJobDescription('just doing my job').saveOutput()
+    
     scheduler.run('cron', () => {
       say("Running a job at 21:23 PM at Europe/Berlin 😀");
-    }).cron('23 21 * * *', 'Europe/Berlin').setJobDescription('I do Something via cron').saveOutput();
+    }).cron('23 21 * * *', 'Europe/Berlin').setJobDescription('I do Something via cron').saveOutput()
 
     // create as many tasks as you want here
   }

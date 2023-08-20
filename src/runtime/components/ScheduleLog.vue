@@ -1,64 +1,28 @@
 <template>
   <div class="dark-background">
     <div class="container">
-      <!-- <div class="logo-top">
-        <img
-          src="/nuxtscheduler.png"
-          alt="Nuxt Scheduler"
-          height="100"
-          width="100"
-        >
-      </div> -->
-      <div v-for="(task, index) in data?.register" :key="index" class="register">
-        <div class="col">
-           Key {{ task.key }}
-        </div>
-        <div class="col">
-           Description {{ task.jobDescription }}
-        </div>
-        <div class="col">
-           interval: {{ task.interval }}
-        </div>
-        <div class="col">
-           input: {{ task.input ?? 'n/a' }}
-        </div>
-      </div>
-      <div
-        v-for="(log, index) in data?.schedulerLog"
-        :key="index"
-        class="log"
-      >
-        <h2 class="title">
-          {{ log.jobKey }}
-        </h2>
-        <p class="desc">
-          {{ log.entries[0]?.jobDescription }}
-        </p>
-        <button
-          v-if="log.entries.length > 10"
-          class="more-button"
-          @click="toggleExpanded(index)"
-        >
-          {{ expandedRows[index] ? 'Show less' : 'Show more' }}
-        </button>
-        <div class="entry-container">
-          <div
-            v-for="(entry, entryIndex) in log.entries.slice().reverse().slice(0, expandedRows[index] ? log.entries.length : 10).reverse()"
-            :key="entryIndex"
-            :class="entry.passed ? 'box success' : 'box failure'"
-            class="box"
-            @mouseenter="hoverEntry = entry"
-            @mouseleave="hoverEntry = null"
-          >
-            <div
-              v-if="hoverEntry === entry"
-              class="tooltip"
-            >
-              <p><strong>Description:</strong> {{ entry.jobDescription }}</p>
-              <p><strong>Passed:</strong> {{ entry.passed ? 'Yes' : 'No' }}</p>
-              <p><strong>Interval:</strong> {{ entry.interval }}</p>
-              <p><strong>Output:</strong> {{ entry.output }}</p>
-              <p><strong>Date Time:</strong> {{ entry.dateTime }}</p>
+      <div class="title">Registered Tasks</div>
+      <div class="">
+        <div class="log" v-for="(task, index) in tasks" :key="index">
+          <div class="">key: {{ task.key }}</div>
+          <div class="">description: {{ task.jobDescription }}</div>
+          <div class="">Interval: {{ task.interval }}</div>
+          <div class="">input: {{ task.input ?? 'n/a' }}</div>
+          <div class="tasks" v-if="task.matchingLogs.length < 1"> No tasks have run yet</div>
+          <div v-else>
+            <div class="entry-container tasks">
+              <div
+                v-for="(entry, entryIndex) in task.matchingLogs.slice().reverse().slice(0, 10).reverse()"
+                :key="entryIndex" :class="entry.passed ? 'box success' : 'box failure'" class="box"
+                @mouseenter="hoverEntry = entry" @mouseleave="hoverEntry = null">
+                <div v-if="hoverEntry === entry" class="tooltip">
+                  <p><strong>Description:</strong> {{ entry.jobDescription }}</p>
+                  <p><strong>Passed:</strong> {{ entry.passed ? 'Yes' : 'No' }}</p>
+                  <p><strong>Interval:</strong> {{ entry.interval }}</p>
+                  <p><strong>Output:</strong> {{ entry.output }}</p>
+                  <p><strong>Date Time:</strong> {{ entry.dateTime }}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -67,11 +31,10 @@
   </div>
 </template>
 
-
 <script lang="ts" setup>
 import { ref, useFetch } from '#imports'
 
-type Entry = {
+type ScheduleLogEntry = {
   jobDescription: string;
   passed: boolean;
   interval: string;
@@ -79,25 +42,23 @@ type Entry = {
   dateTime: string;
 };
 
-type Log = {
-  jobKey: string;
-  entries: Entry[];
-};
+type tasks = {
+  matchingLogs: [] | ScheduleLogEntry[];
+  jobDescription: string;
+  passed: boolean;
+  schedulerKey: string;
+  saveOutput: boolean;
+  interval: string | undefined;
+  input: string | undefined;
+  timezone: string | undefined;
+  key: string;
+}[]
 
-type SchedulerData = {
-  all: string[];
-  schedulerLog: Log[];
-};
 
-const hoverEntry = ref<Entry | null>(null)
-const expandedRows = ref({})
-
-const toggleExpanded = (index) => {
-  expandedRows.value[index] = !expandedRows.value[index]
-}
-
-const { data } = await useFetch<SchedulerData>('/api/schedule')
+const hoverEntry = ref<ScheduleLogEntry | null>(null)
+const { data: tasks } = await useFetch<tasks>('/api/schedule')
 </script>
+
 <style scoped>
 body {
   margin: 0;
@@ -113,6 +74,7 @@ body {
   width: 100%;
   height: 100%;
   background-color: #1c1c1c;
+  overflow-y: scroll;
 }
 
 .container {
@@ -120,6 +82,7 @@ body {
   margin: 2em;
   background-color: #1c1c1c;
   color: #f5f5f5;
+
 }
 
 .log {
@@ -129,17 +92,23 @@ body {
   margin-bottom: 1em;
 }
 
-.register {
-  border: 1px solid #00b894;
+.flex-table {
   display: flex;
-  justify-content: space-between;
-  width: 100%;  /* optional, based on your design requirement */
+  flex-direction: column;
+  width: 100%;
 }
 
-.col {
+.row {
+  display: flex;
+}
+
+.cell {
   flex: 1;
-  padding: 5px;  
-  border: 1px solid #ccc; 
+  /* Equal distribution of space among children */
+  padding: 5px;
+  /* Adjust this value as per your requirements */
+  border: 1px solid #ddd;
+  /* This gives cell separation; you can remove if you don't need */
 }
 
 .title {
@@ -177,6 +146,7 @@ body {
 .tooltip {
   position: absolute;
   background-color: #f5f5f5;
+  width: 200 rem;
   color: #000;
   padding: 0.5em;
   border-radius: 5px;
@@ -202,5 +172,9 @@ body {
   display: flex;
   justify-content: center;
   margin-bottom: 1em;
+}
+
+.tasks {
+  margin-top: 20px ;
 }
 </style>

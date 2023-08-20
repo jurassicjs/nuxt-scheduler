@@ -13,3 +13,11 @@ export type InternalSchedulerObject = {
   input: string | undefined;
   timezone: string | undefined;
 };
+
+export type ScheduleLogEntry = {
+  jobDescription: string;
+  passed: boolean;
+  interval: string;
+  output: string;
+  dateTime: string;
+};

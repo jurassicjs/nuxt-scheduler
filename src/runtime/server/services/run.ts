@@ -1,6 +1,6 @@
 // @ts-ignore
 import cron from 'node-cron';
-import {saveToStorage} from './saveToStorage';
+import { saveToStorage } from './saveToStorage';
 import { InternalSchedulerObject } from './types/Scheduler';
 
 type MethodObject = {
@@ -10,17 +10,30 @@ type MethodObject = {
 let scheduleRegister: Map<string, InternalSchedulerObject> = new Map();
 
 function registerJob(key: string, internalSchedulerObject: InternalSchedulerObject) {
-  // console.log(`registering key: ${key}`)
-  scheduleRegister.set(key, internalSchedulerObject);
+  const schedulerKey = getKey(key)
+  scheduleRegister.set(schedulerKey, internalSchedulerObject);
 }
 
 export function getscheduleRegister() {
   const scheduleObject = Array.from(scheduleRegister.entries()).map(([key, scheduleObject]) => ({
     key,
     ...scheduleObject
-}));
+  }));
 
   return scheduleObject;
+}
+
+
+function getKey(key: string) {
+  if (!key.startsWith('scheduler:')) {
+    const newKey = `scheduler:${key}`
+    console.error(
+      `key in saveOutputTo(key) must start with 'scheduler:' ${key} does not. updated to ${newKey}`
+    )
+    key = newKey
+  }
+
+  return key
 }
 
 export function run(key: string, callback: Function) {
@@ -41,15 +54,12 @@ export function run(key: string, callback: Function) {
 
   function wrapWithProxy(targetObject: MethodObject): MethodObject {
     return new Proxy(targetObject, {
-      get(target, propName, receiver) {
+      get(target, propName) {
         if (typeof propName === "symbol") return;
         const origMethod = target[propName];
         if (typeof origMethod === 'function') {
-          return function(...args: any[]) {
-            console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-            // Call the original method
+          return function (...args: any[]) {
             const result = origMethod.apply(target, args);
-            console.log({interval: origMethod.name, input: args[0], timezone: args[1]})
             internalSchedulerObject.interval = origMethod.name
             internalSchedulerObject.input = args[0]
             internalSchedulerObject.timezone = args[1]
@@ -63,18 +73,12 @@ export function run(key: string, callback: Function) {
 
   function saveOutput(): void {
     internalSchedulerObject.saveOutput = true;
-    if (!key.startsWith('scheduler:')) {
-      const newKey = `scheduler:${key}`
-      console.error(
-        `key in saveOutputTo(key) must start with 'scheduler:' ${key} does not. updated to ${newKey}`
-      )
-      key = newKey
-    }
-    internalSchedulerObject.schedulerKey = key
+    const schedulerKey = getKey(key)
+    internalSchedulerObject.schedulerKey = schedulerKey
   }
 
   registerJob(key, internalSchedulerObject)
-  
+
 
   function setJobDescription(jobDescription: string) {
     internalSchedulerObject.jobDescription = jobDescription
@@ -96,13 +100,13 @@ export function run(key: string, callback: Function) {
         if (error instanceof Error) {
           errorMessage = error.message
         }
-        await saveToStorage(internalSchedulerObject, schedule, JSON.stringify({errorMessage: errorMessage, error: error}))
+        await saveToStorage(internalSchedulerObject, schedule, JSON.stringify({ errorMessage: errorMessage, error: error }))
       }
     }
   }
 
- const intervalMethods = {
-    everySecond:() => {
+  const intervalMethods = {
+    everySecond: () => {
       cron.schedule('* * * * * *', async () => {
         await executeAndHandleError(callback, 'everySecond')
       });
@@ -255,12 +259,16 @@ export function run(key: string, callback: Function) {
     cron: (interval: string, timezone?: string) => {
       timezone ? cron.schedule(interval, async () => {
         await executeAndHandleError(callback, `cron_${interval}_${timezone}`)
-      }, {scheduled: true, timezone: timezone}) : cron.schedule(interval, async () => {
+      }, { scheduled: true, timezone: timezone }) : cron.schedule(interval, async () => {
         await executeAndHandleError(callback, `cron_${interval}`)
       });
       return schedulerObject
     }
 
-  }
-  return  wrapWithProxy(intervalMethods);
+  } as const
+
+  type intervalMethodsType = typeof intervalMethods
+  const typedProxy = wrapWithProxy(intervalMethods) as intervalMethodsType;
+
+  return typedProxy
 }
