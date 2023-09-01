@@ -1,6 +1,17 @@
 # Changelog
 
 
+## v0.1.2
+
+
+### 🩹 Fixes
+
+  - Remove ts file extention form schedule (19774da)
+
+### ❤️  Contributors
+
+- Rohrig <richard.t.rohrig@gmail.com>
+
 ## v0.1.1
 
 ## v0.1.0
