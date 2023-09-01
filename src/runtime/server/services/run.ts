@@ -7,14 +7,14 @@ type MethodObject = {
   [key: string]: (...args: any[]) => any;
 };
 
-let scheduleRegister: Map<string, InternalSchedulerObject> = new Map();
+const scheduleRegister: Map<string, InternalSchedulerObject> = new Map();
 
 function registerJob(key: string, internalSchedulerObject: InternalSchedulerObject) {
   const schedulerKey = getKey(key)
   scheduleRegister.set(schedulerKey, internalSchedulerObject);
 }
 
-export function getscheduleRegister() {
+export function getScheduleRegister() {
   const scheduleObject = Array.from(scheduleRegister.entries()).map(([key, scheduleObject]) => ({
     key,
     ...scheduleObject

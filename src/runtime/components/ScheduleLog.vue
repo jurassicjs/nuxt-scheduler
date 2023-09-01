@@ -1,20 +1,48 @@
 <template>
   <div class="dark-background">
     <div class="container">
-      <div class="title">Registered Tasks</div>
+      <div class="title">
+        Registered Tasks
+      </div>
       <div class="">
-        <div class="log" v-for="(task, index) in tasks" :key="index">
-          <div class="">key: {{ task.key }}</div>
-          <div class="">description: {{ task.jobDescription }}</div>
-          <div class="">Interval: {{ task.interval }} {{ task.input }}</div>
-          <div class="tasks" v-if="task.matchingLogs.length < 1"> No tasks have run yet</div>
-          <div v-else>
+        <div
+          v-for="(task, index) in tasks"
+          :key="index"
+          class="log"
+        >
+          <div class="">
+            key: {{ task.key }}
+          </div>
+          <div class="">
+            description: {{ task.jobDescription }}
+          </div>
+          <div class="">
+            Interval: {{ task.interval }} {{ task.input }}
+          </div>
+          <div
+            v-if="task.matchingLogs.length < 1 && task.saveOutput"
+            class="tasks"
+          >
+            No tasks have run yet
+          </div>
+          <div v-if="!task.saveOutput">
+            This task is not configured to be logged
+          </div>
+
+          <div v-if="task.matchingLogs.length > 0 && task.saveOutput">
             <div class="entry-container tasks">
               <div
                 v-for="(entry, entryIndex) in task.matchingLogs.slice().reverse().slice(0, 10).reverse()"
-                :key="entryIndex" :class="entry.passed ? 'box success' : 'box failure'" class="box"
-                @mouseenter="hoverEntry = entry" @mouseleave="hoverEntry = null">
-                <div v-if="hoverEntry === entry" class="tooltip">
+                :key="entryIndex"
+                :class="entry.passed ? 'box success' : 'box failure'"
+                class="box"
+                @mouseenter="hoverEntry = entry"
+                @mouseleave="hoverEntry = null"
+              >
+                <div
+                  v-if="hoverEntry === entry"
+                  class="tooltip"
+                >
                   <p><strong>Description:</strong> {{ entry.jobDescription }}</p>
                   <p><strong>Passed:</strong> {{ entry.passed ? 'Yes' : 'No' }}</p>
                   <p><strong>Interval:</strong> {{ entry.interval }}</p>
@@ -55,7 +83,7 @@ type tasks = {
 
 
 const hoverEntry = ref<ScheduleLogEntry | null>(null)
-const { data: tasks } = await useFetch<tasks>('/api/schedule')
+const { data: tasks }: {data: tasks} = await useFetch<tasks[]>('/api/schedule')
 </script>
 
 <style scoped>
@@ -91,33 +119,9 @@ body {
   margin-bottom: 1em;
 }
 
-.flex-table {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.row {
-  display: flex;
-}
-
-.cell {
-  flex: 1;
-  /* Equal distribution of space among children */
-  padding: 5px;
-  /* Adjust this value as per your requirements */
-  border: 1px solid #ddd;
-  /* This gives cell separation; you can remove if you don't need */
-}
-
 .title {
   font-size: 1.5em;
   font-weight: bold;
-  margin-bottom: 0.5em;
-}
-
-.desc {
-  color: #ccc;
   margin-bottom: 0.5em;
 }
 
@@ -145,7 +149,6 @@ body {
 .tooltip {
   position: absolute;
   background-color: #f5f5f5;
-  width: 200 rem;
   color: #000;
   padding: 0.5em;
   border-radius: 5px;
