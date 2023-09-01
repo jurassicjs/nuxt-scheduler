@@ -1,8 +1,8 @@
 import { defaultStorage as storage } from "~/server/app/services/storage"
 import { getScheduleRegister } from "../services/run"
 import { ScheduleLogEntry } from "../services/types/Scheduler"
+import { defineEventHandler } from 'h3';
 
-// @ts-ignore
 export default defineEventHandler(async () => {
   try {
     const register = getScheduleRegister()
