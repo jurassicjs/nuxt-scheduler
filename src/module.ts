@@ -33,13 +33,13 @@ export default defineNuxtModule<ModuleOptions>({
 
     addServerHandler({
       route: '/api/schedule',
-      handler: resolve(__dirname, './runtime/server/api/schedule.ts'),
+      handler: resolve(__dirname, './runtime/server/api/schedule'),
     })
     addComponent({
       filePath: resolve(__dirname, './runtime/components/ScheduleLog.vue'),
       name: 'ScheduleLog',
     })
-
+~
     addTemplate({
       filename: 'types/scheduler.d.ts',
       getContents: () => [
