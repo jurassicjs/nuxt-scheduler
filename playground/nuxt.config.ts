@@ -1,7 +1,9 @@
+import { defaultStorage } from "./storage";
+
 export default defineNuxtConfig({
   modules: ['../src/module'],
-  myModule: {},
+  nuxtScheduler: {storage: defaultStorage},
   runtimeConfig: {
-      nuxtRedisPassword: ''
+    check: 'whatever'
   }
 })

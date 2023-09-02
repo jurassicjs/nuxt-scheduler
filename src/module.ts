@@ -1,7 +1,9 @@
 import {defineNuxtModule, createResolver, addTemplate, addComponent, addServerHandler} from '@nuxt/kit'
 import defu from 'defu'
 
-export interface ModuleOptions { }
+export interface ModuleOptions {
+  storage: any
+ }
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -16,6 +18,13 @@ export default defineNuxtModule<ModuleOptions>({
   },
   setup(options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
+    const {storage} = options
+
+    if(storage) {
+      console.log('storage is here', storage)
+    } else {
+      console.log('no storage', storage)
+    }
 
     nuxt.hook('nitro:config', (nitroConfig) => {
       nitroConfig.alias = nitroConfig.alias || {}
@@ -31,6 +40,8 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
 
+
+
     addServerHandler({
       route: '/api/schedule',
       handler: resolve(__dirname, './runtime/server/api/schedule'),
@@ -39,7 +50,7 @@ export default defineNuxtModule<ModuleOptions>({
       filePath: resolve(__dirname, './runtime/components/ScheduleLog.vue'),
       name: 'ScheduleLog',
     })
-~
+
     addTemplate({
       filename: 'types/scheduler.d.ts',
       getContents: () => [
