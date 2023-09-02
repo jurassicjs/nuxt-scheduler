@@ -20,7 +20,7 @@
             Interval: {{ task.interval }} {{ task.input }}
           </div>
           <div
-            v-if="task.matchingLogs.length < 1 && task.saveOutput"
+            v-if="task?.matchingLogs?.length < 1 && task.saveOutput"
             class="tasks"
           >
             No tasks have run yet
@@ -29,7 +29,7 @@
             This task is not configured to be logged
           </div>
 
-          <div v-if="task.matchingLogs.length > 0 && task.saveOutput">
+          <div v-if="task.matchingLogs?.length > 0 && task.saveOutput">
             <div class="entry-container tasks">
               <div
                 v-for="(entry, entryIndex) in task.matchingLogs.slice().reverse().slice(0, 10).reverse()"

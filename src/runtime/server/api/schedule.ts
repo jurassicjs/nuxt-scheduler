@@ -1,7 +1,7 @@
-import { defaultStorage as storage } from "~/server/app/services/storage"
 import { getScheduleRegister } from "../services/run"
 import { ScheduleLogEntry } from "../services/types/Scheduler"
 import { defineEventHandler } from 'h3';
+import { getSchedulerStorage } from "../services/useScheduler";
 
 export default defineEventHandler(async () => {
   try {
@@ -11,6 +11,7 @@ export default defineEventHandler(async () => {
       entries: any
     }
 
+    const storage = getSchedulerStorage()
     const all = await storage.getKeys()
     const schedulerLog: job[] = []
     const schedulerKeys = all.filter((key: string) => key.startsWith('scheduler:'))

@@ -1,9 +1,11 @@
 import {defineNuxtModule, createResolver, addTemplate, addComponent, addServerHandler} from '@nuxt/kit'
 import defu from 'defu'
-
+import type { Storage, StorageValue } from 'unstorage'
 export interface ModuleOptions {
-  storage: any
+  storage: Storage<StorageValue>
  }
+
+export const scheduleStorage: {storage: Storage<StorageValue>|null} = {storage: null}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -21,9 +23,11 @@ export default defineNuxtModule<ModuleOptions>({
     const {storage} = options
 
     if(storage) {
-      console.log('storage is here', storage)
+      //make storage available to the scheduler
+      console.log('storage is here')
+      registerStorage(storage)
     } else {
-      console.log('no storage', storage)
+      console.log('no storage')
     }
 
     nuxt.hook('nitro:config', (nitroConfig) => {
@@ -32,15 +36,12 @@ export default defineNuxtModule<ModuleOptions>({
         inline: [resolve('./runtime')]
       })
       nitroConfig.alias['#scheduler'] = resolve('./runtime/server/services')
-
       nitroConfig.publicAssets ||= []
       nitroConfig.publicAssets.push({
         dir: resolve('./runtime/public'),
         maxAge: 60 * 60 * 24 * 365 // 1 year
       })
     })
-
-
 
     addServerHandler({
       route: '/api/schedule',
@@ -65,5 +66,14 @@ export default defineNuxtModule<ModuleOptions>({
     })
   }
 })
+
+function registerStorage(storage: any) {
+  scheduleStorage.storage = storage
+}
+
+export function getSchedulerStorage(): Storage<StorageValue> {
+  return scheduleStorage.storage
+}
+
 
 
