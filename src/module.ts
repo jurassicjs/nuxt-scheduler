@@ -1,6 +1,6 @@
 import {defineNuxtModule, createResolver, addTemplate, addComponent, addServerHandler} from '@nuxt/kit'
 import defu from 'defu'
-import type { Storage, StorageValue } from 'unstorage'
+import type { Storage, StorageValue } from './types'
 export interface ModuleOptions {
   storage: Storage<StorageValue>
  }
@@ -14,9 +14,6 @@ export default defineNuxtModule<ModuleOptions>({
     compatibility: {
       nuxt: '^3.0.0'
     }
-  },
-  defaults: {
-    addPlugin: false
   },
   setup(options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
@@ -71,7 +68,7 @@ function registerStorage(storage: any) {
   scheduleStorage.storage = storage
 }
 
-export function getSchedulerStorage(): Storage<StorageValue> {
+export function getSchedulerStorage(): Storage<StorageValue> | null {
   return scheduleStorage.storage
 }
 
