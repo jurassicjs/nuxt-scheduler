@@ -162,6 +162,41 @@ function startScheduler() {
 }
 ```
 
+## building Nuxt App with nuxt-scheduler
+> to prevent the scheduler from running during the build, you can do the following
+
+update the build command to add a new environment variable
+```json
+"scripts": {
+    "build": "APP_ENV=build nuxt build",
+}
+```
+  
+  then in your scheduler plugin, you can check for the environment variable
+  ```js
+  import { useScheduler } from "#scheduler"
+
+export default defineNitroPlugin(() => {
+  //early return if build context
+  if (process.env.APP_ENV === 'build') {
+		console.log('[server/plugins/scheduler.ts] Skipping scheduler, in build context');
+		return;
+	}
+  startScheduler()
+})
+
+function startScheduler() {
+ 
+  const scheduler = useScheduler();
+
+  scheduler.run(() => {
+    console.log("cool beans! I run once a second! 😀");
+  }).everySecond();
+
+  // create as many tasks as you want here
+}
+```
+
 ## Development
 
 ```bash
